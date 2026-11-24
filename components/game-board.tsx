@@ -164,18 +164,18 @@ export default function GameBoard() {
         </div>
       </div>
 
-      {/* ── Main: board LEFT, picker RIGHT ── */}
-      <div className="flex items-stretch border-b-[3px]" style={{ borderColor: C.divider }}>
+      {/* ── Main: board + picker (side by side on desktop, stacked on phones) ── */}
+      <div className="flex flex-col sm:flex-row items-stretch border-b-[3px]" style={{ borderColor: C.divider }}>
 
         {/* Board */}
-        <div className="p-3 border-r-[3px]" style={{ background: C.boardBg, borderColor: C.divider }}>
-          <div className="grid grid-cols-3 gap-[7px]">
+        <div className="p-3 flex justify-center border-b-[3px] sm:border-b-0 sm:border-r-[3px]" style={{ background: C.boardBg, borderColor: C.divider }}>
+          <div className="grid grid-cols-[repeat(3,auto)] gap-[7px]">
             {gs.board.map((row,ri) => row.map((cell,ci) => {
               const key=`${ri}-${ci}`, isV=validCells.has(key), isW=winSet.has(key)
               const dim = !isV && !!gs.selectedPieceSize && !gs.gameOver
               return (
                 <div key={key} onClick={()=>click(ri,ci)}
-                  className={`w-[84px] h-[84px] flex items-center justify-center select-none cursor-pointer
+                  className={`w-[25vw] h-[25vw] max-w-[84px] max-h-[84px] sm:w-[84px] sm:h-[84px] flex items-center justify-center select-none cursor-pointer
                     ${isW?'cartoon-cell-win':isV?'cartoon-cell-valid':'cartoon-cell'} ${dim?'opacity-40':''}`}>
                   {cell
                     ? <GamePiece player={cell.player} size={cell.size} />
@@ -187,7 +187,7 @@ export default function GameBoard() {
         </div>
 
         {/* Egg picker */}
-        <div className="flex flex-col" style={{ width: 185, background: C.pickerBg }}>
+        <div className="flex flex-col w-full sm:w-[185px]" style={{ background: C.pickerBg }}>
           {/* Picker header */}
           <div className="flex items-center justify-center gap-1.5 py-2 px-2 text-[7px] border-b-[2px] shrink-0"
             style={{ background: C.vsBg, borderColor: '#3D2A8A', color: 'white', textShadow: '1px 1px 0 #3D2A8A' }}>
@@ -195,7 +195,7 @@ export default function GameBoard() {
           </div>
 
           {/* Piece buttons */}
-          <div className="flex-1 flex flex-col justify-around px-2 py-1">
+          <div className="flex-1 flex flex-row sm:flex-col justify-around items-end sm:items-stretch px-2 py-2 sm:py-1">
             {SIZES.map(size => {
               const count=myPieces[size], isSel=gs.selectedPieceSize===size, empty=count<=0
               return (

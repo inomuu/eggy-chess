@@ -6,7 +6,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 export default function Home() {
   return (
     <main
-      className="h-screen overflow-hidden flex flex-col p-2 md:p-3"
+      className="h-[100dvh] overflow-hidden flex flex-col p-2 md:p-3"
       style={{ background: 'linear-gradient(160deg, #74C0FC 0%, #B2EBF2 50%, #C8F9C0 100%)' }}
     >
       <div className="max-w-5xl mx-auto w-full flex flex-col h-full min-h-0">
@@ -62,7 +62,7 @@ export default function Home() {
 
           <TabsContent
             value="play"
-            className="min-h-0 flex items-center justify-center overflow-hidden mt-0"
+            className="min-h-0 flex items-start sm:items-center justify-center overflow-y-auto overflow-x-hidden mt-0 pb-3"
             style={{ flex: '1 1 0' }}
           >
             <GameBoard />

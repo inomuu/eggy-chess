@@ -155,10 +155,10 @@ export default function TrainerBoard() {
         You play both sides. Hints show the best move for <span style={{ color: "#6C5CE7" }}>whoever&apos;s turn it is</span>.
       </div>
 
-      <div className="flex items-stretch border-b-[3px]" style={{ borderColor: "#E8E8E8" }}>
+      <div className="flex flex-col sm:flex-row items-stretch border-b-[3px]" style={{ borderColor: "#E8E8E8" }}>
         {/* Board */}
-        <div className="p-3 border-r-[3px] flex flex-col gap-2" style={{ background: "#A0D8C8", borderColor: "#E8E8E8" }}>
-          <div className="grid grid-cols-3 gap-[7px]">
+        <div className="p-3 border-b-[3px] sm:border-b-0 sm:border-r-[3px] flex flex-col gap-2" style={{ background: "#A0D8C8", borderColor: "#E8E8E8" }}>
+          <div className="grid grid-cols-[repeat(3,auto)] justify-center gap-[7px]">
             {pos.board.map((c, i) => {
               const hint = hintFor(i)
               const isWin = over?.line?.includes(i)
@@ -166,7 +166,7 @@ export default function TrainerBoard() {
               const dim = humanTurn && !!selected && !legal
               return (
                 <div key={i} onClick={() => clickCell(i)}
-                  className={`relative w-[84px] h-[84px] flex items-center justify-center select-none
+                  className={`relative w-[25vw] h-[25vw] max-w-[84px] max-h-[84px] sm:w-[84px] sm:h-[84px] flex items-center justify-center select-none
                     ${isWin ? "cartoon-cell-win" : legal && !hint ? "cartoon-cell-valid" : "cartoon-cell"} ${dim ? "opacity-40" : ""}`}
                   style={hint ? (hint.star
                     ? { background: "#FFEAA7", borderColor: "#E1A100", boxShadow: "4px 4px 0 #B07D00", cursor: "pointer" }
@@ -191,21 +191,21 @@ export default function TrainerBoard() {
         </div>
 
         {/* Side panel */}
-        <div className="flex flex-col" style={{ width: 200, background: "#FFFAEB" }}>
+        <div className="flex flex-col w-full sm:w-[200px]" style={{ background: "#FFFAEB" }}>
           <div className="flex items-center justify-center py-2 px-2 text-[7px] border-b-[2px] shrink-0"
             style={{ background: over ? "#6C5CE7" : pos.side === 1 ? "#4D96FF" : "#FF6584", borderColor: "#2D3436", color: "white", textShadow: "1px 1px 0 rgba(0,0,0,0.3)" }}>
             🥚 {over ? "GAME OVER" : `${moverLabel}'S TURN`} 🥚
           </div>
-          <div className="flex-1 flex flex-col justify-around px-2 py-1">
+          <div className="flex-1 flex flex-row sm:flex-col justify-around px-2 py-2 sm:py-1">
             {([1, 2, 3] as const).map(s => {
               const count = moverPieces[s - 1], empty = count <= 0, wins = winsBySize(s)
               return (
-                <div key={s} className="flex items-center justify-center gap-2">
+                <div key={s} className="flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-2">
                   <button onClick={() => humanTurn && setSelected(selected === s ? null : s)} disabled={empty || !humanTurn}
                     className={`cartoon-piece-btn ${selected === s ? "selected" : ""}`} style={{ width: 72, height: 72 }}>
                     <GamePiece player={PLAYER(pos.side)} size={SIZE_KEY[s]} />
                   </button>
-                  <div className="flex flex-col gap-1 w-[60px]">
+                  <div className="flex flex-col items-center sm:items-start gap-1 sm:w-[60px]">
                     <span className="text-[7px]" style={{ color: empty ? "#B2BEC3" : "#2D3436" }}>×{count}</span>
                     {hints && humanTurn && ready && !empty && (
                       <span className="text-[5px]" style={{ color: wins ? "#00B894" : bestInSize(s) ? "#B07D00" : "#B2BEC3", lineHeight: 1.6 }}>
