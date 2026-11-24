@@ -16,6 +16,7 @@ type GameState = {
   gameOver: boolean
   winner: Player | "draw" | null
   winningCells: [number, number][] | null
+  notice: string | null
 }
 type Scores = { player1: number; player2: number }
 
@@ -28,8 +29,14 @@ const init = (): GameState => ({
   selectedPieceSize: null,
   player1Pieces: { small: 3, medium: 3, large: 2 },
   player2Pieces: { small: 3, medium: 3, large: 2 },
-  gameOver: false, winner: null, winningCells: null,
+  gameOver: false, winner: null, winningCells: null, notice: null,
 })
+
+/** Can `player` place any egg they have left (on an empty cell or a smaller enemy egg)? */
+function hasMove(board: Piece[][], pieces: Record<PieceSize, number>, player: Player) {
+  return SIZES.some(size => pieces[size] > 0 && board.some(row => row.some(cell =>
+    !cell || (cell.player !== player && SIZE_VALUES[size] > SIZE_VALUES[cell.size]))))
+}
 
 function checkWin(board: Piece[][], p1: Record<PieceSize, number>, p2: Record<PieceSize, number>) {
   const lines: [number, number][][] = [
@@ -42,7 +49,9 @@ function checkWin(board: Piece[][], p1: Record<PieceSize, number>, p2: Record<Pi
     if (cs[0]?.player && cs.every(c => c?.player === cs[0]?.player))
       return { winner: cs[0]!.player as Player, gameOver: true, winningCells: line as [number,number][] }
   }
-  if ([...Object.values(p1),...Object.values(p2)].every(v=>v===0)) {
+  // Ends on cell count when all eggs are used, or when neither player has a legal move left.
+  const allUsed = [...Object.values(p1),...Object.values(p2)].every(v=>v===0)
+  if (allUsed || (!hasMove(board, p1, "player1") && !hasMove(board, p2, "player2"))) {
     let a=0,b=0
     for (let r=0;r<3;r++) for (let c=0;c<3;c++) {
       if (board[r][c]?.player==="player1") a++
@@ -84,8 +93,14 @@ export default function GameBoard() {
     if (gs.currentPlayer==="player1") p1[gs.selectedPieceSize]--; else p2[gs.selectedPieceSize]--
     const { winner, gameOver, winningCells } = checkWin(nb,p1,p2)
     if (gameOver && winner && winner!=="draw") setScores(s=>({...s,[winner]:s[winner as Player]+1}))
-    setGs({ board:nb, currentPlayer:gs.currentPlayer==="player1"?"player2":"player1",
-      selectedPieceSize:null, player1Pieces:p1, player2Pieces:p2, gameOver, winner, winningCells })
+    // A player with eggs left but nowhere legal to put them skips their turn.
+    let next: Player = op, notice: string | null = null
+    if (!gameOver && !hasMove(nb, op==="player1"?p1:p2, op)) {
+      next = gs.currentPlayer
+      notice = `${op==="player1"?"P1":"P2"} HAS NO LEGAL MOVE — TURN SKIPPED`
+    }
+    setGs({ board:nb, currentPlayer:next,
+      selectedPieceSize:null, player1Pieces:p1, player2Pieces:p2, gameOver, winner, winningCells, notice })
   }
 
   const reset = () => setGs(init())
@@ -213,7 +228,7 @@ export default function GameBoard() {
       <div className="flex items-center justify-between px-3 py-2"
         style={{ background: C.footerBg }}>
         <span className="text-[6px]" style={{ color: '#FFEAA7' }}>
-          {gs.gameOver ? '★ GAME OVER' : gs.selectedPieceSize ? '▶ PLACE YOUR EGG' : '▶ SELECT AN EGG'}
+          {gs.gameOver ? '★ GAME OVER' : gs.notice ? `⚠ ${gs.notice}` : gs.selectedPieceSize ? '▶ PLACE YOUR EGG' : '▶ SELECT AN EGG'}
         </span>
         <button onClick={reset} className="cartoon-btn">
           ↺ RESET

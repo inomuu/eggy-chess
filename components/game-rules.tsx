@@ -72,6 +72,8 @@ export default function GameRules() {
         <Section title="HOW TO WIN" colorIdx={1}>
           <Li><span style={{ color: '#E17055' }}>LINE OF 3</span> — 3 in a row wins</Li>
           <Li><span style={{ color: '#4D96FF' }}>MOST CELLS</span> — most eggs when done</Li>
+          <Li>No legal move? Your turn is skipped</Li>
+          <Li>Nobody can move? Game ends, cells counted</Li>
           <Li><span style={{ color: '#B2BEC3' }}>DRAW</span> — equal cells = tie</Li>
         </Section>
 
