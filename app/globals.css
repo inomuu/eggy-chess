@@ -1,0 +1,124 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 199 70% 88%;
+    --foreground: 220 25% 15%;
+    --card: 0 0% 100%;
+    --card-foreground: 220 25% 15%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 220 25% 15%;
+    --primary: 258 72% 65%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 48 95% 88%;
+    --secondary-foreground: 220 25% 15%;
+    --muted: 210 20% 92%;
+    --muted-foreground: 220 12% 48%;
+    --accent: 48 95% 88%;
+    --accent-foreground: 220 25% 15%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 220 25% 20%;
+    --input: 0 0% 94%;
+    --ring: 258 72% 65%;
+    --radius: 0.75rem;
+  }
+}
+
+@layer base {
+  * { @apply border-border; box-sizing: border-box; }
+  body {
+    @apply bg-background text-foreground;
+    font-family: var(--font-pixel, 'Courier New', monospace);
+  }
+}
+
+/* ── Animations ── */
+@keyframes cartoon-bounce { 0% { transform: translateY(0) scale(1); } 100% { transform: translateY(-6px) scale(1.06); } }
+@keyframes pixel-blink    { 0%,100%{opacity:1} 50%{opacity:0} }
+.pixel-blink { animation: pixel-blink 1s steps(1) infinite; }
+
+/* ── Board cells ── */
+.cartoon-cell {
+  border: 3px solid #2D3436;
+  background: #FFF9E0;
+  border-radius: 12px;
+  box-shadow: 4px 4px 0 #2D3436;
+  cursor: default;
+}
+.cartoon-cell-valid {
+  border: 3px solid #00B894 !important;
+  background: #6FDC8E !important;
+  border-radius: 12px;
+  box-shadow: 4px 4px 0 #007A5E !important;
+  cursor: pointer;
+}
+.cartoon-cell-valid:hover {
+  background: #52C774 !important;
+  transform: translate(-1px, -1px);
+  box-shadow: 5px 5px 0 #007A5E !important;
+}
+.cartoon-cell-win {
+  border: 3px solid #E17055 !important;
+  background: #FFEAA7 !important;
+  border-radius: 12px;
+  box-shadow: 4px 4px 0 #D4A000 !important;
+  animation: cartoon-bounce 0.4s ease infinite alternate !important;
+}
+
+/* ── Buttons ── */
+.cartoon-btn {
+  border: 3px solid #2D3436;
+  border-radius: 10px;
+  background: #FDCB6E;
+  color: #2D3436;
+  box-shadow: 4px 4px 0 #2D3436;
+  padding: 8px 16px;
+  font-family: var(--font-pixel, monospace);
+  font-size: 7px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+  transition: transform 0.05s, box-shadow 0.05s;
+}
+.cartoon-btn:hover  { background: #E8B849; transform: translate(2px, 2px); box-shadow: 2px 2px 0 #2D3436; }
+.cartoon-btn:active { transform: translate(4px, 4px); box-shadow: none; }
+
+/* ── Piece selection buttons ── */
+.cartoon-piece-btn {
+  border: 3px solid #2D3436;
+  border-radius: 14px;
+  background: #FFF9E0;
+  box-shadow: 3px 3px 0 #2D3436;
+  padding: 6px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.05s, box-shadow 0.05s;
+}
+.cartoon-piece-btn:hover:not(:disabled) {
+  background: #FFFBF0;
+  transform: translate(-1px, -1px);
+  box-shadow: 4px 4px 0 #2D3436;
+}
+.cartoon-piece-btn.selected {
+  border-color: #6C5CE7 !important;
+  background: #E8E4FF !important;
+  box-shadow: 1px 1px 0 #2D3436 !important;
+  transform: translate(2px, 2px);
+}
+.cartoon-piece-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+  box-shadow: 1px 1px 0 #2D3436;
+}
+
+@layer utilities { .text-balance { text-wrap: balance; } }
+
+/* Fix: Tailwind utility classes override [hidden] from @layer base */
+[hidden] { display: none !important; }
