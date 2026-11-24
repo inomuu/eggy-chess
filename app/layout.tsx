@@ -21,7 +21,7 @@ export const metadata: Metadata = {
     type: 'website',
     images: [
       {
-        url: `${SITE_URL}/preview.png`,
+        url: `${SITE_URL}/preview.png?v=2`,
         width: 1200,
         height: 630,
         alt: 'Eggy Chess Preview',
@@ -32,7 +32,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Eggy Chess',
     description: 'Play the web version of Eggy Chess, based on Ragnarok Origin!',
-    images: [`${SITE_URL}/preview.png`],
+    images: [`${SITE_URL}/preview.png?v=2`],
   },
 }
 
