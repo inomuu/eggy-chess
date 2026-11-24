@@ -204,8 +204,8 @@ export default function GameBoard() {
                     className={`cartoon-piece-btn ${isSel?'selected':''}`}>
                     <GamePiece player={gs.currentPlayer} size={size} />
                   </button>
-                  <span className="text-[7px]" style={{ color: empty ? C.labelMuted : '#2D3436' }}>
-                    ×{count}
+                  <span className="text-[6px] text-center leading-[1.6]" style={{ color: empty ? C.labelMuted : '#2D3436' }}>
+                    {size.toUpperCase()}<br />×{count}
                   </span>
                 </div>
               )

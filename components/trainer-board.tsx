@@ -206,6 +206,7 @@ export default function TrainerBoard() {
                     <GamePiece player={PLAYER(pos.side)} size={SIZE_KEY[s]} />
                   </button>
                   <div className="flex flex-col items-center sm:items-start gap-1 sm:w-[60px]">
+                    <span className="text-[6px]" style={{ color: empty ? "#B2BEC3" : "#6C5CE7" }}>{SIZE_KEY[s].toUpperCase()}</span>
                     <span className="text-[7px]" style={{ color: empty ? "#B2BEC3" : "#2D3436" }}>×{count}</span>
                     {hints && humanTurn && ready && !empty && (
                       <span className="text-[5px]" style={{ color: wins ? "#00B894" : bestInSize(s) ? "#B07D00" : "#B2BEC3", lineHeight: 1.6 }}>
