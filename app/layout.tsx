@@ -8,17 +8,20 @@ const pixelFont = Press_Start_2P({
   variable: '--font-pixel',
 })
 
+const SITE_URL = 'https://inomuu.github.io/eggy-chess'
+
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
   title: 'Eggy Chess',
   description: 'Play the web version of Eggy Chess, based on Ragnarok Origin!',
   openGraph: {
     title: 'Eggy Chess',
     description: 'Enjoy a fun and strategic experience with Eggy Chess, the web adaptation of the beloved Ragnarok Origin minigame. Battle with cute egg warriors and test your tactical skills!',
-    url: 'https://eggychess.vercel.app',
+    url: SITE_URL,
     type: 'website',
     images: [
       {
-        url: 'https://eggychess.vercel.app/preview.png',
+        url: `${SITE_URL}/preview.png`,
         width: 1200,
         height: 630,
         alt: 'Eggy Chess Preview',
@@ -29,7 +32,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Eggy Chess',
     description: 'Play the web version of Eggy Chess, based on Ragnarok Origin!',
-    images: ['https://eggychess.vercel.app/preview.png'],
+    images: [`${SITE_URL}/preview.png`],
   },
 }
 
