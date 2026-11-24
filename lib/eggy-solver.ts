@@ -74,7 +74,12 @@ const SYMS: number[][] = (() => {
 })()
 const RADIX = [4, 4, 3, 4, 4, 3]
 
-export function createSolver(opts: { bits?: number; book?: Record<string, Result> } = {}) {
+export function createSolver(opts: {
+  bits?: number
+  book?: Record<string, Result>
+  /** Precomputed trap chances, keyed by the position after the move (see `trapChance`). */
+  traps?: Record<string, number>
+} = {}) {
   const bits = opts.bits ?? 22
   const size = 1 << bits, mask = size - 1, limit = Math.floor(size * 0.8)
   let K = new Float64Array(size), V = new Uint8Array(size), used = 0
@@ -128,14 +133,35 @@ export function createSolver(opts: { bits?: number; book?: Record<string, Result
     return r
   }
 
-  /** Result of every legal move for the side to move (result is for the position after the move). */
-  function rateMoves(b: readonly number[], pc: readonly number[], p: Side): { move: Move; result: Result }[] {
+  /**
+   * "Trap chance" of a position the mover `p` just created, with the opponent `q` to move:
+   * the share of the opponent's replies after which `p` can force a win. It measures how
+   * likely an imperfect opponent is to slip, assuming any reply is equally likely.
+   */
+  function trapChance(b: readonly number[], pc: readonly number[], p: Side): number {
+    const q: Side = p === 1 ? 2 : 1
+    const hit = opts.traps?.[posKey(b, pc, q)]
+    if (hit !== undefined) return hit
+    const replies = legalMoves(b, pc, q)
+    if (!replies.length) return solve(b, pc, q) === p ? 1 : 0 // opponent must pass
+    let slips = 0
+    for (const r of replies) { const [x, y] = play(b, pc, q, r); if (solve(x, y, p) === p) slips++ }
+    return slips / replies.length
+  }
+
+  /**
+   * Result of every legal move for the side to move (result is for the position after the move).
+   * Moves that don't force a win also get `trap`: how often the opponent's reply would hand the win back.
+   */
+  function rateMoves(b: readonly number[], pc: readonly number[], p: Side): { move: Move; result: Result; trap: number | null }[] {
     const q: Side = p === 1 ? 2 : 1
     return legalMoves(b, pc, p).map(move => {
       const [nb, np] = play(b, pc, p, move)
-      return { move, result: solve(nb, np, q) }
+      const result = solve(nb, np, q)
+      const done = !!lineWin(nb) || np.every(v => v === 0)
+      return { move, result, trap: result === p || done ? null : trapChance(nb, np, p) }
     })
   }
 
-  return { solve, rateMoves }
+  return { solve, rateMoves, trapChance }
 }
