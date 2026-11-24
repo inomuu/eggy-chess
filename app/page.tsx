@@ -56,7 +56,7 @@ export default function Home() {
                 data-[state=active]:bg-[#6C5CE7] data-[state=active]:text-white data-[state=active]:shadow-none
                 text-[#636E72]"
             >
-              ★ TRAIN P2
+              ★ TRAIN
             </TabsTrigger>
           </TabsList>
 
